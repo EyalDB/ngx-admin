@@ -6,19 +6,23 @@
     <a class="logo" href="#" (click)="navigateHome()">ngx-<span>admin</span></a>
   </div>
   <nb-select [selected]="currentTheme" (selectedChange)="changeTheme($event)" status="primary">
-    <nb-option *ngFor="let theme of themes" [value]="theme.value"> {{ theme.name }}</nb-option>
+    <nb-option *ngFor="let theme of themes" [value]="theme.value">{{ theme.name }}</nb-option>
+  </nb-select>
+  <!-- תפריט בחירת שפות -->
+  <nb-select [(selected)]="currentLang" (selectedChange)="switchLanguage($event)" status="primary">
+    <nb-option value="en">English</nb-option>
+    <nb-option value="he">עברית</nb-option>
   </nb-select>
 </div>
 
 <div class="header-container">
   <nb-actions size="small">
-
     <nb-action class="control-item">
       <nb-search type="rotate-layout"></nb-search>
     </nb-action>
     <nb-action class="control-item" icon="email-outline"></nb-action>
     <nb-action class="control-item" icon="bell-outline"></nb-action>
-    <nb-action class="user-action" *nbIsGranted="['view', 'user']" >
+    <nb-action class="user-action" *nbIsGranted="['view', 'user']">
       <nb-user [nbContextMenu]="userMenu"
                [onlyPicture]="userPictureOnly"
                [name]="user?.name"

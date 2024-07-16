@@ -1,10 +1,10 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { NbMediaBreakpointsService, NbMenuService, NbSidebarService, NbThemeService } from '@nebular/theme';
-
 import { UserData } from '../../../@core/data/users';
 import { LayoutService } from '../../../@core/utils';
 import { map, takeUntil } from 'rxjs/operators';
 import { Subject } from 'rxjs';
+import { TranslateService } from '@ngx-translate/core'; // ייבוא שירות התרגום
 
 @Component({
   selector: 'ngx-header',
@@ -12,40 +12,35 @@ import { Subject } from 'rxjs';
   templateUrl: './header.component.html',
 })
 export class HeaderComponent implements OnInit, OnDestroy {
-
   private destroy$: Subject<void> = new Subject<void>();
   userPictureOnly: boolean = false;
   user: any;
 
   themes = [
-    {
-      value: 'default',
-      name: 'Light',
-    },
-    {
-      value: 'dark',
-      name: 'Dark',
-    },
-    {
-      value: 'cosmic',
-      name: 'Cosmic',
-    },
-    {
-      value: 'corporate',
-      name: 'Corporate',
-    },
+    { value: 'default', name: 'Light' },
+    { value: 'dark', name: 'Dark' },
+    { value: 'cosmic', name: 'Cosmic' },
+    { value: 'corporate', name: 'Corporate' },
   ];
 
   currentTheme = 'default';
+  userMenu = [{ title: 'Profile' }, { title: 'Log out' }];
+  languages = [
+    { code: 'en', label: 'English' },
+    { code: 'he', label: 'עברית' }
+  ];  // רשימת שפות
+  currentLang = 'en';  // שפת ברירת מחדל
 
-  userMenu = [ { title: 'Profile' }, { title: 'Log out' } ];
-
-  constructor(private sidebarService: NbSidebarService,
-              private menuService: NbMenuService,
-              private themeService: NbThemeService,
-              private userService: UserData,
-              private layoutService: LayoutService,
-              private breakpointService: NbMediaBreakpointsService) {
+  constructor(
+    private sidebarService: NbSidebarService,
+    private menuService: NbMenuService,
+    private themeService: NbThemeService,
+    private userService: UserData,
+    private layoutService: LayoutService,
+    private breakpointService: NbMediaBreakpointsService,
+    private translate: TranslateService
+  ) {
+    this.translate.setDefaultLang(this.currentLang);
   }
 
   ngOnInit() {
@@ -71,13 +66,19 @@ export class HeaderComponent implements OnInit, OnDestroy {
       .subscribe(themeName => this.currentTheme = themeName);
   }
 
-  ngOnDestroy() {
-    this.destroy$.next();
-    this.destroy$.complete();
+  switchLanguage(lang: string) {
+    this.translate.use(lang);
+    document.documentElement.setAttribute('dir', lang === 'he' ? 'rtl' : 'ltr');
+    this.currentLang = lang;
   }
 
   changeTheme(themeName: string) {
     this.themeService.changeTheme(themeName);
+  }
+
+  ngOnDestroy() {
+    this.destroy$.next();
+    this.destroy$.complete();
   }
 
   toggleSidebar(): boolean {

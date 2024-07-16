@@ -50,6 +50,10 @@
       white-space: nowrap;
       text-decoration: none;
     }
+
+    nb-select {
+      margin-left: 20px; // מיקום של תפריט השפות
+    }
   }
 
   @include media-breakpoint-down(sm) {
